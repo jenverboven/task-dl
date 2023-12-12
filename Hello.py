@@ -13,6 +13,19 @@
 # limitations under the License.
 
 import streamlit as st
+import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow import keras
+from keras.models import Sequential
+from keras.layers import Conv2D
+from keras.layers import MaxPooling2D
+from keras.layers import Flatten
+from keras.layers import Dense
+from keras.layers import Dropout
+from keras.preprocessing import image
+from keras.utils import image_dataset_from_directory
+from contextlib import redirect_stdout
 from streamlit.logger import get_logger
 
 LOGGER = get_logger(__name__)
@@ -20,29 +33,36 @@ LOGGER = get_logger(__name__)
 
 def run():
     st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
+        page_title="Task DL",
     )
 
-    st.write("# Welcome to Streamlit! 👋")
+    model = Sequential()
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+    model.add(Conv2D(32, (3, 3), input_shape = (64, 64, 3), activation = 'relu', name='conv_layer_1'))
+
+    model.add(MaxPooling2D(pool_size = (2, 2)))
+
+    model.add(Dropout(0.2))
+
+    model.add(Conv2D(32, (3, 3), input_shape = (64, 64, 3), activation = 'relu', name='conv_layer_2'))
+    model.add(MaxPooling2D(pool_size = (2, 2)))
+    model.add(Dropout(0.2))
+
+    model.add(Flatten())
+    model.add(Dense(activation="relu", units=128))
+
+    model.add(Dense(activation="sigmoid", units=1))
+
+    # compiling the CNN
+    model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+
+    print(model.summary())
+    
+    st.write("Model Summary:")
+    with st.echo():
+        with st.spinner("Calculating model summary..."):
+            with redirect_stdout(st):
+                model.summary()
 
 
 if __name__ == "__main__":
