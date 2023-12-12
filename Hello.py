@@ -59,10 +59,10 @@ def run():
     print(model.summary())
     
     st.write("Model Summary:")
-    with st.echo():
-        with st.spinner("Calculating model summary..."):
-            with redirect_stdout(st):
-                model.summary()
+    # with st.echo():
+    #     with st.spinner("Calculating model summary..."):
+    #         with redirect_stdout(st):
+    #             model.summary()
 
 
 if __name__ == "__main__":
