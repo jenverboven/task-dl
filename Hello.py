@@ -17,6 +17,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
+from keras import optimizers
+from keras import layers
 from keras.models import Sequential
 from keras.layers import Conv2D
 from keras.layers import MaxPooling2D
@@ -28,42 +30,35 @@ from keras.utils import image_dataset_from_directory
 from contextlib import redirect_stdout
 from streamlit.logger import get_logger
 
-LOGGER = get_logger(__name__)
+NUM_CLASSES = 5
+
+# Create a sequential model with a list of layers
+model = tf.keras.Sequential([
+  layers.Conv2D(32, (3, 3), input_shape = (128, 128, 3), activation="relu"),
+  layers.MaxPooling2D((2, 2)),
+  layers.Dropout(0.2),
+  layers.Conv2D(64, (3, 3), activation="relu"),
+  layers.MaxPooling2D((2, 2)),
+  layers.Dropout(0.2),
+  layers.Conv2D(128, (3, 3), activation="relu"),
+  layers.MaxPooling2D((2, 2)),
+  layers.Dropout(0.2),
+  layers.Flatten(),
+  layers.Dense(64, activation="relu"),
+  layers.Dense(NUM_CLASSES, activation="softmax")
+])
+
+# Compile and train your model as usual
+# model.compile(optimizer = optimizers.Adam(learning_rate=0.001),
+#               loss = 'categorical_crossentropy',
+#               metrics = ['accuracy'],
+#               run_eagerly=True)
+
+model.compile(optimizer = "adam",
+              loss = 'categorical_crossentropy',
+              metrics = ['accuracy'],
+              run_eagerly=True)
+
+st.write("test")
 
 
-def run():
-    st.set_page_config(
-        page_title="Task DL",
-    )
-
-    model = Sequential()
-
-    model.add(Conv2D(32, (3, 3), input_shape = (64, 64, 3), activation = 'relu', name='conv_layer_1'))
-
-    model.add(MaxPooling2D(pool_size = (2, 2)))
-
-    model.add(Dropout(0.2))
-
-    model.add(Conv2D(32, (3, 3), input_shape = (64, 64, 3), activation = 'relu', name='conv_layer_2'))
-    model.add(MaxPooling2D(pool_size = (2, 2)))
-    model.add(Dropout(0.2))
-
-    model.add(Flatten())
-    model.add(Dense(activation="relu", units=128))
-
-    model.add(Dense(activation="sigmoid", units=1))
-
-    # compiling the CNN
-    model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
-
-    print(model.summary())
-    
-    st.write("Model Summary:")
-    # with st.echo():
-    #     with st.spinner("Calculating model summary..."):
-    #         with redirect_stdout(st):
-    #             model.summary()
-
-
-if __name__ == "__main__":
-    run()
