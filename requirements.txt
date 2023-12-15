@@ -5,3 +5,4 @@ keras
 Pillow
 streamlit
 scipy
+scikit-learn
