@@ -53,7 +53,7 @@ st.title("Task DL")
 st.write("Example images from training set:")
 
 # Display images side by side
-st.image([image1, image2, image3, image4, image5], caption=['Car', 'Plane', 'Bike', 'Bus', 'Train'], use_column_width=True)
+st.image([image1, image2, image3, image4, image5], caption=['Car', 'Plane', 'Bike', 'Bus', 'Train'], width=300)
 
 amount_epochs = st.slider("Select the amount of epochs", min_value=1, max_value=50, value=15, step=1)
 
